@@ -9,6 +9,18 @@
              Width="Auto">
 
     <UserControl.Resources>
+
+        <Style x:Key="MessageTextStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="20"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/> <!--To wrap text to next line-->
+            <Setter Property="Text" Value="{Binding ReceivedMessage}"/>
+        </Style>
+        
         <Style TargetType="{x:Type Button}">
             <Setter Property="SnapsToDevicePixels" Value="True"/>
             <Setter Property="Height" Value="Auto"/>
@@ -34,6 +46,49 @@
                             Padding="{TemplateBinding Padding}"
                             SnapsToDevicePixels="True"
                             x:Name="border">
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+
+                                    <!--Column Message Bubble-->
+                                    <ColumnDefinition/>
+
+                                    <!--Column Reply Button-->
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <!--Message Bubble-->
+                                <Border
+                                    Height="Auto"
+                                    MinHeight="60"
+                                    HorizontalAlignment="Right"
+                                    Width="Auto"
+                                    VerticalAlignment="Center">
+
+                                    <Border.Style>
+                                        <!--To change color of our bubble on message received and message sent-->
+                                        <Style TargetType="{x:Type Border}">
+                                            <!--If message is received-->
+                                            <Setter Property="CornerRadius" Value="30,30,30,0"/>
+                                            <Setter Property="Background" Value="#dce1de"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsReceived}" Value="False">
+                                                    <Setter Property="CornerRadius" Value="30,30,0,30"/>
+                                                    <Setter Property="Background" Value="#49a078"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                </Border>
+                                
+                                <!--Message text-->
+                                <!--Dock Panel is used here to expand according to message length and max width is a limit to expand to.-->
+                                <DockPanel 
+                                    MaxHeight="700">
+                                    <TextBlock
+                                        Style="{StaticResource MessageTextStyle}"/>
+                                </DockPanel>
+                            </Grid>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -61,7 +116,7 @@
             HorizontalScrollBarVisibility="Disabled"
             Grid.Row="1">
             <ItemsControl 
-                ItemsSource="{Binding Conversation, UpdateSourceTrigger=PropertyChanged}"
+                ItemsSource="{Binding Conversations, UpdateSourceTrigger=PropertyChanged}"
                 Margin="15,0,0,0">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>

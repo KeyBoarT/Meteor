@@ -10,7 +10,7 @@ namespace MeteorChat.MVVM.Models
     {
         public string ContactName { get; set; }
         public string ReceivedMessage { get; set; }
-        public string MsgReceiveOn { get; set; }
+        public string MsgReceivedOn { get; set; }
         public string SentMessage { get; set; }
         public string MsgSentOn { get; set; }
         public bool IsMessageReceived { get; set; }

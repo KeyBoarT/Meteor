@@ -2,6 +2,7 @@
 using MeteorChat.MVVM.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.Data.SqlClient;
 using System.Windows;
 
 namespace MeteorChat.MVVM.ViewModels
@@ -14,7 +15,7 @@ namespace MeteorChat.MVVM.ViewModels
         private string _lastSeen;
         private ObservableCollection<StatusDataModel> _statusThumbsCollection = new ObservableCollection<StatusDataModel>();
         private ObservableCollection<ChatListDataModel> _chats = new ObservableCollection<ChatListDataModel>();
-        private ObservableCollection<ChatConversationModel> _conversation = new ObservableCollection<ChatConversationModel>();
+        private ObservableCollection<ChatConversationModel> _conversations = new ObservableCollection<ChatConversationModel>();
         #endregion
 
         #region Properties
@@ -23,7 +24,7 @@ namespace MeteorChat.MVVM.ViewModels
         public string LastSeen { get { return _lastSeen; } set { _lastSeen = value; OnPropertyChanged(); } }
         public ObservableCollection<StatusDataModel> StatusThumbsCollection { get => _statusThumbsCollection; set { _statusThumbsCollection = value; OnPropertyChanged(); } }
         public ObservableCollection<ChatListDataModel> Chats { get => _chats; set { _chats = value; OnPropertyChanged(); } }
-        public ObservableCollection<ChatConversationModel> Conversation { get => _conversation; set { _conversation = value; OnPropertyChanged(); } }
+        public ObservableCollection<ChatConversationModel> Conversations { get => _conversations; set { _conversations = value; OnPropertyChanged(); } }
         #endregion
 
         #region Commands
@@ -130,14 +131,42 @@ namespace MeteorChat.MVVM.ViewModels
         }
         private void LoadChatConversation()
         {
+            if (_connection.State == System.Data.ConnectionState.Closed)
+            {
+                _connection.Open();
+            }
 
+            using (SqlCommand com = new SqlCommand("select * from conversation where ContactName=Steve", _connection))
+            {
+                using (SqlDataReader reader = com.ExecuteReader())
+                {
+                    while(reader.Read())
+                    {
+                        string MsqReceivedOn = !string.IsNullOrEmpty(reader["MsgReceivedOn"].ToString()) ? Convert.ToDateTime(reader["MsgReceivedOn"].ToString()).ToString("MMM dd, hh:mm tt") : "";
+                        string MsgSentOn = !string.IsNullOrEmpty(reader["MsgSentOn"].ToString()) ? Convert.ToDateTime(reader["MsgSentOn"].ToString()).ToString("MMM dd, hh:mm tt") : "";
+
+                        ChatConversationModel conversation = new ChatConversationModel()
+                        {
+                            ContactName = reader["ContactName"].ToString(),
+                            ReceivedMessage = reader["ReceivedMsgs"].ToString(),
+                            MsgReceivedOn = MsqReceivedOn,
+                            SentMessage = reader["SentMsgs"].ToString(),
+                            MsgSentOn = MsgSentOn,
+                            IsMessageReceived = !string.IsNullOrEmpty(reader["ReceivedMsgs"].ToString())
+                        };
+                        Conversations.Add(conversation);
+                    }
+                }
+            }
         }
         #endregion
 
         #region Database
         /// <summary>
-        /// Bu kısım daha sonra güncellenecek
+        /// Bu kısım daha sonra güncellenecek, şimdilik proje tasarımını görmek için oluşturulmuş bir database kullanacağız
         /// </summary>
+
+        SqlConnection _connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\mehme\source\repos\MeteorChat\MeteorChat\Database\Database1.mdf;Integrated Security=True");
         #endregion
 
         public MainViewModel()
@@ -145,7 +174,7 @@ namespace MeteorChat.MVVM.ViewModels
             AssignCommands();
             LoadStatusThumbs();
             LoadChats();
-            LoadChatConversation();
+            //LoadChatConversation();
         }
 
     }

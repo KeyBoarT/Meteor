@@ -20,8 +20,8 @@ C:\Users\mehme\source\repos\MeteorChat\MeteorChat\obj\Debug\CustomControls\Statu
 C:\Users\mehme\source\repos\MeteorChat\MeteorChat\obj\Debug\CustomControls\StatusThumbs.baml
 C:\Users\mehme\source\repos\MeteorChat\MeteorChat\obj\Debug\CustomControls\ChatList.g.cs
 C:\Users\mehme\source\repos\MeteorChat\MeteorChat\obj\Debug\CustomControls\ChatList.baml
-C:\Users\mehme\source\repos\MeteorChat\MeteorChat\bin\Debug\Assets\Database1.mdf
-C:\Users\mehme\source\repos\MeteorChat\MeteorChat\bin\Debug\Assets\Database1_log.ldf
 C:\Users\mehme\source\repos\MeteorChat\MeteorChat\obj\Debug\CustomControls\Conversation.g.cs
 C:\Users\mehme\source\repos\MeteorChat\MeteorChat\obj\Debug\MeteorChat_Content.g.cs
 C:\Users\mehme\source\repos\MeteorChat\MeteorChat\obj\Debug\CustomControls\Conversation.baml
+C:\Users\mehme\source\repos\MeteorChat\MeteorChat\bin\Debug\Database\Database1.mdf
+C:\Users\mehme\source\repos\MeteorChat\MeteorChat\bin\Debug\Database\Database1_log.ldf
