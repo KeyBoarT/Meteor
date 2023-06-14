@@ -1,0 +1,80 @@
+﻿<UserControl x:Class="MeteorChat.CustomControls.Conversation"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MeteorChat.CustomControls"
+             mc:Ignorable="d" 
+             Height="Auto"
+             Width="Auto">
+
+    <UserControl.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="Padding" Value="4,1"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+
+            <!--To select the first chat. it is optional. I don't prefer to check the chat automatically so i
+                        will comment it out for now -->
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            CornerRadius="20"
+                            Padding="{TemplateBinding Padding}"
+                            SnapsToDevicePixels="True"
+                            x:Name="border">
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <!--Searchbox Row-->
+            <RowDefinition Height="Auto"/>
+
+            <!--Conversation Body-->
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Border>
+
+        </Border>
+
+        <!--Body-->
+        <!--To-Do: Add attachedproperty to Auto-Scroll to bottom-->
+        <ScrollViewer
+            Background="WhiteSmoke"
+            HorizontalScrollBarVisibility="Disabled"
+            Grid.Row="1">
+            <ItemsControl 
+                ItemsSource="{Binding Conversation, UpdateSourceTrigger=PropertyChanged}"
+                Margin="15,0,0,0">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <!--To-Do: Add animation-->
+                        <StackPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
