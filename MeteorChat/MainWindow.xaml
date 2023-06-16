@@ -46,8 +46,8 @@
                         <Ellipse.Fill>
                             <ImageBrush
                             ImageSource="{Binding ContactPhoto, 
-                            FallbackValue=/assets/1.png,
-                            TargetNullValue=/assets/1.png,
+                            FallbackValue=assets/1.png,
+                            TargetNullValue=assets/1.png,
                             UpdateSourceTrigger=PropertyChanged}"
                             Stretch="UniformToFill"/>
                         </Ellipse.Fill>

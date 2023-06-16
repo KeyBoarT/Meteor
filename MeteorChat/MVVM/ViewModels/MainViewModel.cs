@@ -4,6 +4,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Windows;
+using System.Windows.Input;
 
 namespace MeteorChat.MVVM.ViewModels
 {
@@ -32,6 +33,7 @@ namespace MeteorChat.MVVM.ViewModels
         public RelayCommand MinimizeWindowCommand { get; set; }
         public RelayCommand CloseWindowCommand { get; set; }
         public RelayCommand MaximizeWindowCommand { get; set; }
+        public RelayCommand GetSelectedChatCommand { get; set; }
         #endregion
 
         #region Methods
@@ -135,8 +137,8 @@ namespace MeteorChat.MVVM.ViewModels
             {
                 _connection.Open();
             }
-
-            using (SqlCommand com = new SqlCommand("select * from conversation where ContactName=Steve", _connection))
+            if (_conversations == null) { _conversations = new ObservableCollection<ChatConversationModel>(); }
+            using (SqlCommand com = new SqlCommand("select * from conversations where ContactName='Mike'", _connection))
             {
                 using (SqlDataReader reader = com.ExecuteReader())
                 {
@@ -174,7 +176,15 @@ namespace MeteorChat.MVVM.ViewModels
             AssignCommands();
             LoadStatusThumbs();
             LoadChats();
-            //LoadChatConversation();
+            LoadChatConversation();
+            GetSelectedChatCommand = new RelayCommand(o =>
+            {
+                if (o is ChatListDataModel v)
+                {
+                    ContactName = v.ContactName;
+                    ContactPhoto = v.ContactPhoto;
+                }
+            });
         }
 
     }

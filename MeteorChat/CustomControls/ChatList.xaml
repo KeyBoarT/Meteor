@@ -19,6 +19,8 @@
                         <Setter Property="VerticalAlignment" Value="Center"/>
                         <Setter Property="Background" Value="Transparent"/>
                         <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Command" Value="{Binding DataContext.GetSelectedChatCommand, ElementName=Chats, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Setter Property="CommandParameter" Value="{Binding ContactName}"/>
                         <Setter Property="Content" Value="{Binding ContactName}"/>
 
                         <!--To select the first chat. it is optional. I don't prefer to check the chat automatically so i

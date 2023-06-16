@@ -3,13 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewmodel="clr-namespace:MeteorChat.MVVM.ViewModels"
              xmlns:local="clr-namespace:MeteorChat.CustomControls"
              mc:Ignorable="d" 
              Height="Auto"
              Width="Auto">
 
-    <UserControl.Resources>
+    <UserControl.DataContext>
+        <viewmodel:MainViewModel/>
+    </UserControl.DataContext>
 
+    <UserControl.Resources>
         <Style x:Key="MessageTextStyle" TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="15"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
@@ -17,28 +21,36 @@
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="TextWrapping" Value="Wrap"/> <!--To wrap text to next line-->
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <!--To wrap text to next line-->
             <Setter Property="Text" Value="{Binding ReceivedMessage}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsMessageReceived}" Value="True">
+                    <Setter Property="Text" Value="{Binding ReceivedMessage}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsMessageReceived}" Value="False">
+                    <Setter Property="Text" Value="{Binding SentMessage}"/>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
-        
-        <Style TargetType="{x:Type Button}">
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <Setter Property="Height" Value="Auto"/>
-            <Setter Property="Padding" Value="4,1"/>
-            <Setter Property="Margin" Value="10"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
+        <DataTemplate x:Key="ItemTemplate">
+            <Button>
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="SnapsToDevicePixels" Value="True"/>
+                        <Setter Property="Height" Value="Auto"/>
+                        <Setter Property="Padding" Value="4,1"/>
+                        <Setter Property="Margin" Value="10"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0"/>
 
-            <!--To select the first chat. it is optional. I don't prefer to check the chat automatically so i
-                        will comment it out for now -->
-
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border
                             Background="{TemplateBinding Background}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             BorderBrush="{TemplateBinding BorderBrush}"
@@ -47,53 +59,115 @@
                             SnapsToDevicePixels="True"
                             x:Name="border">
 
-                            <Grid>
-                                <Grid.ColumnDefinitions>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <!--Reply Bubble-->
+                                                <RowDefinition Height="Auto"/>
+                                                <!--Message Bubble-->
+                                                <RowDefinition/>
 
-                                    <!--Column Message Bubble-->
-                                    <ColumnDefinition/>
+                                                <!--Message Time-->
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
 
-                                    <!--Column Reply Button-->
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
+                                                    <!--Column Reply Button-->
+                                                    <ColumnDefinition Width="Auto"/>
 
-                                <!--Message Bubble-->
-                                <Border
-                                    Height="Auto"
-                                    MinHeight="60"
-                                    HorizontalAlignment="Right"
-                                    Width="Auto"
-                                    VerticalAlignment="Center">
+                                                    <!--Column Message Bubble-->
+                                                    <ColumnDefinition/>
 
-                                    <Border.Style>
-                                        <!--To change color of our bubble on message received and message sent-->
-                                        <Style TargetType="{x:Type Border}">
-                                            <!--If message is received-->
-                                            <Setter Property="CornerRadius" Value="30,30,30,0"/>
-                                            <Setter Property="Background" Value="#dce1de"/>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsReceived}" Value="False">
-                                                    <Setter Property="CornerRadius" Value="30,30,0,30"/>
-                                                    <Setter Property="Background" Value="#49a078"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
-                                </Border>
-                                
-                                <!--Message text-->
-                                <!--Dock Panel is used here to expand according to message length and max width is a limit to expand to.-->
-                                <DockPanel 
-                                    MaxHeight="700">
-                                    <TextBlock
-                                        Style="{StaticResource MessageTextStyle}"/>
-                                </DockPanel>
-                            </Grid>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+                                                    <!--Column Reply Button-->
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <!--Message Bubble-->
+                                                <Border
+                                                    Grid.Column="1"
+                                                    Height="Auto"
+                                                    MinHeight="60"
+                                                    Width="Auto"
+                                                    VerticalAlignment="Center">
+
+                                                    <Border.Style>
+                                                        <!--To change color of our bubble on message received and message sent-->
+                                                        <Style TargetType="{x:Type Border}">
+                                                            <!--If message is received-->
+                                                            <Setter Property="CornerRadius" Value="30,30,30,0"/>
+                                                            <Setter Property="Background" Value="#dce1de"/>
+                                                            <Setter Property="HorizontalAlignment" Value="Left"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsMessageReceived}" Value="False">
+                                                                    <Setter Property="CornerRadius" Value="30,30,0,30"/>
+                                                                    <Setter Property="Background" Value="#49a078"/>
+                                                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
+
+                                                    <!--Message text-->
+                                                    <!--Dock Panel is used here to expand according to message length and max width is a limit to expand to.-->
+                                                    <DockPanel 
+                                            MaxHeight="700">
+                                                        <TextBlock
+                                                Style="{StaticResource MessageTextStyle}"/>
+                                                    </DockPanel>
+                                                </Border>
+
+                                                <!--Reply Button-->
+                                                <Button
+                                                    x:Name="ReplyButton"
+                                                    Content="{StaticResource reply}"
+                                                    Visibility="Collapsed"  
+                                                    Grid.Column="2"
+                                                    
+                                                    Style="{StaticResource IconButtonStyle}"/>
+                                            </Grid>
+
+                                            <!--MessageTime-->
+                                            <TextBlock
+                                                Grid.Row="2">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="{x:Type TextBlock}">
+                                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                                        <Setter Property="Margin" Value="0,10,20,0"/>
+                                                        <Style.Triggers>
+
+                                                            <!--If message received show time on left bubble-->
+                                                            <DataTrigger Binding="{Binding IsMessageReceived}" Value="True">
+                                                                <Setter Property="Text" Value="{Binding MsgReceivedOn}"/>
+                                                                <Setter Property="HorizontalAlignment" Value="Left"/>
+                                                            </DataTrigger>
+
+                                                            <!--else on right-->
+                                                            <DataTrigger Binding="{Binding IsMessageReceived}" Value="False">
+                                                                <Setter Property="Text" Value="{Binding MsgSentOn}"/>
+                                                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </Grid>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding IsMessageReceived}" Value="False">
+                                            <Setter TargetName="ReplyButton" Property="Grid.Column" Value="0"/>
+                                        </DataTrigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="ReplyButton" Property="Visibility" Value="Visible"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+        </DataTemplate>
     </UserControl.Resources>
 
     <Grid>
@@ -105,8 +179,26 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Border>
+        <!--SearchBox-->
+        <Border
+                    Background="#dce1de"
+                    CornerRadius="15"
+                    Grid.Row="1"
+                    Margin="20"
+                    Height="50"
+                    x:Name="searchBoxBorder"
+                    FocusManager.FocusedElement="{Binding ElementName=searchQuery}">
 
+            <!--FocusManager.FocusedElement = "{Binding ElementName=searchQuery}=" => to focus our textbox when border gets focused-->
+
+            <TextBox
+                        x:Name="searchQuery"
+                        Padding="12, 0"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Text="Search Text"
+                        VerticalContentAlignment="Center"
+                        VerticalAlignment="Stretch"></TextBox>
         </Border>
 
         <!--Body-->
@@ -115,8 +207,9 @@
             Background="WhiteSmoke"
             HorizontalScrollBarVisibility="Disabled"
             Grid.Row="1">
-            <ItemsControl 
+            <ItemsControl
                 ItemsSource="{Binding Conversations, UpdateSourceTrigger=PropertyChanged}"
+                ItemTemplate="{StaticResource ItemTemplate}"
                 Margin="15,0,0,0">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -124,11 +217,6 @@
                         <StackPanel/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
     </Grid>
