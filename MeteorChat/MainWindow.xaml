@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MeteorChat"
-        xmlns:viewmodel="clr-namespace:MeteorChat.MVVM.ViewModels" xmlns:customcontrols="clr-namespace:MeteorChat.CustomControls"
+        xmlns:viewmodel="clr-namespace:MeteorChat.MVVM.ViewModels"
+        xmlns:customcontrols="clr-namespace:MeteorChat.CustomControls"
         mc:Ignorable="d"
         x:Name="mainWindow"
         AllowsTransparency="True"
@@ -16,7 +17,7 @@
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         Title="Meteor Chat">
-    
+
     <!--Window Resources-->
     <Window.Resources>
         <Style x:Key="ContactInfoButtonStyle" TargetType="{x:Type Button}">
@@ -59,16 +60,15 @@
                         <TextBlock>
                         <!--name-->
                         <Run
-                            Text="{Binding ContactName, UpdateSourceTrigger= PropertyChanged,
-                            TargetNullValue='Contact Name', FallbackValue='Contact Name'}"
+                            Text="{Binding ContactName, UpdateSourceTrigger=PropertyChanged
+                            ,FallbackValue='Kişi İsmi', TargetNullValue='Kişi İsmi'}"
                             FontWeight="Bold"
                             FontSize="20"/>
                         <LineBreak/>
                         
                         <!--online status-->
                         <Run 
-                            Text="{Binding LastSeen, UpdateSourceTrigger= PropertyChanged,
-                            TargetNullValue='Last Seen', FallbackValue='Last Seen'}"
+                            Text="{Binding LastSeen, UpdateSourceTrigger= PropertyChanged}"
                             FontSize="15"/>
                         </TextBlock>
                     </Grid>
@@ -77,14 +77,12 @@
         </ControlTemplate>
     </Window.Resources>
     
-    <!--Binding ViewModel-->
-    <Window.DataContext>
-        <viewmodel:MainViewModel/>
-    </Window.DataContext>
-    
     <!--Structuring MainWindow-->
     <Border CornerRadius="20"
             Background="WhiteSmoke">
+        <Border.DataContext>
+            <viewmodel:MainViewModel/>
+        </Border.DataContext>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>

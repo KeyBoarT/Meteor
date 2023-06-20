@@ -20,9 +20,9 @@ namespace MeteorChat.MVVM.ViewModels
         #endregion
 
         #region Properties
-        public string ContactName { get { return _contactName; } set { _contactName = value; OnPropertyChanged(); } }
-        public Uri ContactPhoto { get { return _contactPhoto; } set { _contactPhoto = value; OnPropertyChanged(); } }
-        public string LastSeen { get { return _lastSeen; } set { _lastSeen = value; OnPropertyChanged(); } }
+        public string ContactName { get => _contactName; set { _contactName = value; OnPropertyChanged(); } }
+        public Uri ContactPhoto { get => _contactPhoto; set { _contactPhoto = value; OnPropertyChanged(); } }
+        public string LastSeen { get => _lastSeen; set { _lastSeen = value; OnPropertyChanged(); } }
         public ObservableCollection<StatusDataModel> StatusThumbsCollection { get => _statusThumbsCollection; set { _statusThumbsCollection = value; OnPropertyChanged(); } }
         public ObservableCollection<ChatListDataModel> Chats { get => _chats; set { _chats = value; OnPropertyChanged(); } }
         public ObservableCollection<ChatConversationModel> Conversations { get => _conversations; set { _conversations = value; OnPropertyChanged(); } }
@@ -83,7 +83,7 @@ namespace MeteorChat.MVVM.ViewModels
         private void AssignCommands()
         {
             //Assign the commands
-            MoveWindowCommand = new RelayCommand(o => { (o as Window).DragMove(); });
+            MoveWindowCommand = new RelayCommand(o => (o as Window).DragMove());
             MinimizeWindowCommand = new RelayCommand(o => (o as Window).WindowState = WindowState.Minimized);
             CloseWindowCommand = new RelayCommand(o => Application.Current.Shutdown());
             MaximizeWindowCommand = new RelayCommand(o =>
@@ -91,6 +91,13 @@ namespace MeteorChat.MVVM.ViewModels
             (o as Window).WindowState == WindowState.Maximized
             ? WindowState.Normal
             : WindowState.Maximized);
+
+            GetSelectedChatCommand = new RelayCommand(o =>
+            {
+                ContactPhoto = (o as ChatListDataModel).ContactPhoto;
+                ContactName = (o as ChatListDataModel).ContactName;
+                MessageBox.Show(ContactName);
+            });
         }
 
         private void LoadChats()
@@ -168,7 +175,7 @@ namespace MeteorChat.MVVM.ViewModels
         /// Bu kısım daha sonra güncellenecek, şimdilik proje tasarımını görmek için oluşturulmuş bir database kullanacağız
         /// </summary>
 
-        SqlConnection _connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\mehme\source\repos\MeteorChat\MeteorChat\Database\Database1.mdf;Integrated Security=True");
+        private readonly SqlConnection _connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\mehme\source\repos\MeteorChat\MeteorChat\Database\Database1.mdf;Integrated Security=True");
         #endregion
 
         public MainViewModel()
@@ -177,14 +184,6 @@ namespace MeteorChat.MVVM.ViewModels
             LoadStatusThumbs();
             LoadChats();
             LoadChatConversation();
-            GetSelectedChatCommand = new RelayCommand(o =>
-            {
-                if (o is ChatListDataModel v)
-                {
-                    ContactName = v.ContactName;
-                    ContactPhoto = v.ContactPhoto;
-                }
-            });
         }
 
     }

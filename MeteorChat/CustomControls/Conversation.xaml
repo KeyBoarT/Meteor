@@ -9,10 +9,6 @@
              Height="Auto"
              Width="Auto">
 
-    <UserControl.DataContext>
-        <viewmodel:MainViewModel/>
-    </UserControl.DataContext>
-
     <UserControl.Resources>
         <Style x:Key="MessageTextStyle" TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="15"/>
