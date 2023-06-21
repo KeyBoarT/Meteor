@@ -14,6 +14,7 @@ namespace MeteorChat.MVVM.ViewModels
         private string _contactName;
         private Uri _contactPhoto;
         private string _lastSeen;
+        private string _messageBox;
         private ObservableCollection<StatusDataModel> _statusThumbsCollection = new ObservableCollection<StatusDataModel>();
         private ObservableCollection<ChatListDataModel> _chats = new ObservableCollection<ChatListDataModel>();
         private ObservableCollection<ChatConversationModel> _conversations = new ObservableCollection<ChatConversationModel>();
@@ -23,6 +24,7 @@ namespace MeteorChat.MVVM.ViewModels
         public string ContactName { get => _contactName; set { _contactName = value; OnPropertyChanged(); } }
         public Uri ContactPhoto { get => _contactPhoto; set { _contactPhoto = value; OnPropertyChanged(); } }
         public string LastSeen { get => _lastSeen; set { _lastSeen = value; OnPropertyChanged(); } }
+        public string MessageText { get => _messageBox; set { _messageBox = value; OnPropertyChanged(); } }
         public ObservableCollection<StatusDataModel> StatusThumbsCollection { get => _statusThumbsCollection; set { _statusThumbsCollection = value; OnPropertyChanged(); } }
         public ObservableCollection<ChatListDataModel> Chats { get => _chats; set { _chats = value; OnPropertyChanged(); } }
         public ObservableCollection<ChatConversationModel> Conversations { get => _conversations; set { _conversations = value; OnPropertyChanged(); } }

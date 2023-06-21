@@ -78,6 +78,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="CustomControls\ContactInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CustomControls\Conversation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -98,6 +102,9 @@
     <Compile Include="Core\RelayCommand.cs" />
     <Compile Include="CustomControls\ChatList.xaml.cs">
       <DependentUpon>ChatList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\ContactInfo.xaml.cs">
+      <DependentUpon>ContactInfo.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomControls\Conversation.xaml.cs">
       <DependentUpon>Conversation.xaml</DependentUpon>
