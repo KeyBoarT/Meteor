@@ -94,9 +94,12 @@ namespace MeteorChat.MVVM.ViewModels
 
             GetSelectedChatCommand = new RelayCommand(o =>
             {
-                ContactPhoto = (o as ChatListDataModel).ContactPhoto;
-                ContactName = (o as ChatListDataModel).ContactName;
-                MessageBox.Show(ContactName);
+                if (o is ChatListDataModel v)
+                {
+                    ContactName = v.ContactName;
+                    ContactPhoto = v.ContactPhoto;
+                    LastSeen = v.LastMessageTime;
+                }
             });
         }
 

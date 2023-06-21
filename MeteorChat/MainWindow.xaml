@@ -18,6 +18,10 @@
         WindowStartupLocation="CenterScreen"
         Title="Meteor Chat">
 
+    <Window.DataContext>
+        <viewmodel:MainViewModel/>
+    </Window.DataContext>
+
     <!--Window Resources-->
     <Window.Resources>
         <Style x:Key="ContactInfoButtonStyle" TargetType="{x:Type Button}">
@@ -47,8 +51,6 @@
                         <Ellipse.Fill>
                             <ImageBrush
                             ImageSource="{Binding ContactPhoto, 
-                            FallbackValue=assets/1.png,
-                            TargetNullValue=assets/1.png,
                             UpdateSourceTrigger=PropertyChanged}"
                             Stretch="UniformToFill"/>
                         </Ellipse.Fill>
@@ -60,8 +62,7 @@
                         <TextBlock>
                         <!--name-->
                         <Run
-                            Text="{Binding ContactName, UpdateSourceTrigger=PropertyChanged
-                            ,FallbackValue='Kişi İsmi', TargetNullValue='Kişi İsmi'}"
+                            Text="{Binding ContactName, UpdateSourceTrigger=PropertyChanged}"
                             FontWeight="Bold"
                             FontSize="20"/>
                         <LineBreak/>
@@ -80,9 +81,6 @@
     <!--Structuring MainWindow-->
     <Border CornerRadius="20"
             Background="WhiteSmoke">
-        <Border.DataContext>
-            <viewmodel:MainViewModel/>
-        </Border.DataContext>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>

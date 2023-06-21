@@ -130,9 +130,6 @@
         Margin="15,0"
         ItemTemplate="{StaticResource thumbsTemplate}"
         ItemsSource="{Binding StatusThumbsCollection, UpdateSourceTrigger=PropertyChanged}">
-        <ItemsControl.DataContext>
-            <viewmodel:MainViewModel/>
-        </ItemsControl.DataContext>
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
                 <StackPanel Orientation="Horizontal">

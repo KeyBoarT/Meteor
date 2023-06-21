@@ -179,7 +179,6 @@
         <Border
                     Background="#dce1de"
                     CornerRadius="15"
-                    Grid.Row="1"
                     Margin="20"
                     Height="50"
                     x:Name="searchBoxBorder"
