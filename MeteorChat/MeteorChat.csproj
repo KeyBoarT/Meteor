@@ -176,6 +176,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Assets\4.jpg" />
+    <Resource Include="Assets\5.jpg" />
+    <Resource Include="Assets\6.jpg" />
+    <Resource Include="Assets\7.png" />
     <Content Include="Database\Database1.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

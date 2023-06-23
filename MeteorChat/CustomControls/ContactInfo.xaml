@@ -4,8 +4,32 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MeteorChat.CustomControls"
-             mc:Ignorable="d" >
-    <Grid>
+             mc:Ignorable="d"
+             MaxWidth="406">
+    <UserControl.Resources>
+        <Style x:Key="MediaButtonsStyle" TargetType="Button">
+            <Setter Property="Width" Value="105"/>
+            <Setter Property="Height" Value="105"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="10">
+                            <Border.Background>
+                                <ImageBrush ImageSource="{Binding Content, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}}}"
+                                            Stretch="UniformToFill"/>
+                            </Border.Background>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid Margin="0,0,0,10">
         <Grid.RowDefinitions>
             
             <!--Close Contact Button-->
@@ -36,11 +60,12 @@
                     Height="150"
                     Stretch="Uniform">
                     <Ellipse.Fill>
-                        <ImageBrush 
+                        <ImageBrush
+                            ImageSource="{Binding ContactPhoto}"
                             Stretch="UniformToFill"/>
                     </Ellipse.Fill>
                 </Ellipse>
-                
+
                 <!--ContactName-->
                 <TextBlock
                     Margin="0,20,0,0"
@@ -54,6 +79,58 @@
                     Margin="0,20,0,0"
                     HorizontalAlignment="Center"
                     Text="{Binding LastSeen,UpdateSourceTrigger=PropertyChanged}"/>
+
+                <!--Media, Links, & Files-->
+                <TextBlock
+                    Margin="0,20,0,0"
+                    HorizontalAlignment="Left"
+                    FontSize="15"
+                    FontWeight="SemiBold"
+                    Text="Media, Links &amp; Files"/>
+
+                <ItemsControl
+                    Margin="0,20,0,0">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <!--To-Do: Add animation-->
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <Button Style="{StaticResource MediaButtonsStyle}"
+                            Content="/assets/3.jpg"/>
+                    <Button Style="{StaticResource MediaButtonsStyle}"
+                            Content="/assets/4.jpg"/>
+                    <Button Style="{StaticResource MediaButtonsStyle}"
+                            Content="/assets/5.jpg"/>
+                    <Button Style="{StaticResource MediaButtonsStyle}"
+                            Content="/assets/6.jpg"/>
+                    <Button Style="{StaticResource MediaButtonsStyle}"
+                            Content="/assets/7.png"/>
+                    <Button Style="{StaticResource MediaButtonsStyle}"
+                            Content="/assets/2.jpg"/>
+                </ItemsControl>
+
+                <!--Status / About-->
+                <TextBlock
+                    Margin="0,20,0,0"
+                    HorizontalAlignment="Left"
+                    FontSize="15"
+                    FontWeight="SemiBold"
+                    Text="About"/>
+
+                <TextBlock
+                    Text="Available"/>
+                
+                <!--Contact Email-->
+                <TextBlock
+                    Margin="0,20,0,0"
+                    HorizontalAlignment="Left"
+                    FontSize="15"
+                    FontWeight="SemiBold"
+                    Text="Contact"/>
+
+                <TextBlock
+                    Text="mehmetszr05@gmail.com"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>
