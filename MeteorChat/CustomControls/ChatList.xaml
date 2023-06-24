@@ -113,7 +113,7 @@
                                                         </TextBlock.Style>
                                                     </TextBlock>
                                                 </Grid>
-                                                
+
                                                 <!--Last Message Time-->
                                                 <Grid Grid.Column="2">
                                                     <TextBlock
@@ -150,9 +150,18 @@
                                                         Style="{StaticResource IconButtonStyle}"
                                                         Command="{Binding DataContext.ChangeChatPinStateCommand, ElementName=_Chats, UpdateSourceTrigger=PropertyChanged}"
                                                         CommandParameter="{Binding}"/>
-                                                    <Button Content="{StaticResource archive}" Style="{StaticResource IconButtonStyle}"/>
-                                                    <Button Content="{StaticResource mute}" Style="{StaticResource IconButtonStyle}"/>
-                                                    <Button Content="{StaticResource trash}" Style="{StaticResource IconButtonStyle}"/>
+                                                    <Button 
+                                                        x:Name="IsArchived"
+                                                        Content="{StaticResource archive}"
+                                                        Style="{StaticResource IconButtonStyle}"
+                                                        Command="{Binding DataContext.ChangeChatArchiveStateCommand, ElementName=_Chats, UpdateSourceTrigger=PropertyChanged}"
+                                                        CommandParameter="{Binding}"/>
+                                                    <Button 
+                                                        Content="{StaticResource mute}"
+                                                        Style="{StaticResource IconButtonStyle}"/>
+                                                    <Button 
+                                                        Content="{StaticResource trash}"
+                                                        Style="{StaticResource IconButtonStyle}"/>
                                                 </UniformGrid>
                                             </Grid>
                                             <!--#endregion-->
@@ -167,6 +176,12 @@
                                         <DataTrigger Binding="{Binding IsPinned}" Value="False">
                                             <Setter TargetName="IsPinned" Property="Content" Value="{StaticResource pinned}"/>
                                         </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsArchived}" Value="True">
+                                            <Setter TargetName="IsArchived" Property="Content" Value="{StaticResource unarchive}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsArchived}" Value="False">
+                                            <Setter TargetName="IsArchived" Property="Content" Value="{StaticResource archive}"/>
+                                        </DataTrigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
                             </Setter.Value>
@@ -175,49 +190,165 @@
                 </RadioButton.Style>
             </RadioButton>
         </DataTemplate>
+        <Style x:Key="ChatListButtonBaseStyle" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="AllChatsButtonStyle" BasedOn="{StaticResource ChatListButtonBaseStyle}" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border
+                            Background="{TemplateBinding Background}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid x:Name="bgAll" Opacity=".6" Grid.ColumnSpan="2"/>
+                                <Path
+                                    Data="{TemplateBinding Content}"
+                                    Margin="20,0"
+                                    Fill="Black"
+                                    HorizontalAlignment="Left"
+                                    Style="{StaticResource {x:Type Path}}"/>
+                                <TextBlock
+                                    Grid.Column="1"
+                                    FontWeight="SemiBold"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                    <Run Text="All Chats"/>
+                                </TextBlock>
+                            </Grid>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bgAll" Property="Background" Value="#dce1de"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="bgAll" Property="Background" Value="#dce1de"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ArchivedChatsButtonStyle" BasedOn="{StaticResource ChatListButtonBaseStyle}" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border
+                            Background="{TemplateBinding Background}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid x:Name="bgArchived" Opacity=".6" Grid.ColumnSpan="2"/>
+                                <Path
+                                    Data="{TemplateBinding Content}"
+                                    Margin="20,0"
+                                    Fill="Black"
+                                    HorizontalAlignment="Left"
+                                    Style="{StaticResource {x:Type Path}}"/>
+                                <TextBlock
+                                    Grid.Column="1"
+                                    FontWeight="SemiBold"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                    <Run Text="Archived ("/>
+                                    <Run Text="{Binding DataContext.ArchivedChats.Count, ElementName=_Chats, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Run Text=")"/>
+                                </TextBlock>
+                            </Grid>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bgArchived" Property="Background" Value="#dce1de"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="bgArchived" Property="Background" Value="#dce1de"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
     <!--To-Do: Scrollbar Style-->
     <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-        <Grid Margin="25,15">
-            <!--In this usercontrol we will list our Contact chats list-->
-            <StackPanel Grid.ColumnSpan="2">
-
+        <Grid Margin="25, 15">
+            <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <!--Archived Chats-->
+                </Grid.RowDefinitions>
+            
+                <!--Pinned / Unpinned Chat List-->
+            <StackPanel>
                 <!--Title-->
-                <StackPanel Orientation="Horizontal">
-                    <Path
-                    Fill="Black"
-                    Data="{StaticResource allchats}"/>
-                    <TextBlock
-                    Margin="10 0"
-                    Text="All Chats"
-                    FontWeight="SemiBold"
-                    VerticalAlignment="Center"/>
-                </StackPanel>
-
-                <!--Chat List-->
+                <ToggleButton
+                        x:Name="allButton"
+                        Content="{StaticResource allchats}"
+                        Style="{StaticResource AllChatsButtonStyle}"/>
+                <!--All Chat List-->
                 <ItemsControl
-                ItemsSource="{Binding ChatsCollectionView, UpdateSourceTrigger=PropertyChanged}"
+                ItemsSource="{Binding Chats, UpdateSourceTrigger=PropertyChanged}"
                 ItemTemplate="{StaticResource ChatButtonItemTemplate}"
                 Padding="0, 15">
+                    <ItemsControl.Style>
+                        <Style TargetType="{x:Type ItemsControl}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsChecked, ElementName=allButton}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsChecked, ElementName=allButton}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ItemsControl.Style>
                 </ItemsControl>
-                
-                <!--Title-->
-                <StackPanel Orientation="Horizontal" x:Name="archivedPanel">
-                    <Path
-                    Fill="Black"
-                    Data="{StaticResource archive}"/>
-                    <TextBlock
-                    Margin="10 0"
-                    Text="Arcived Chats"
-                    FontWeight="SemiBold"
-                    VerticalAlignment="Center"/>
-                </StackPanel>
+            </StackPanel>
 
-                <!--Chat List-->
+            <StackPanel Grid.Row="1">
+                <StackPanel.Style>
+                    <Style TargetType="{x:Type StackPanel}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding DataContext.ArchivedChats.Count, ElementName=_Chats, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <!--Title-->
+                <ToggleButton
+                    x:Name="archiveButton"
+                    Content="{StaticResource archive}"
+                    Style="{StaticResource ArchivedChatsButtonStyle}"/>
+                
+                <!--Archived Chat List-->
                 <ItemsControl
                 ItemsSource="{Binding ArchivedChats, UpdateSourceTrigger=PropertyChanged}"
                 ItemTemplate="{StaticResource ChatButtonItemTemplate}"
                 Padding="0, 15">
+                    <ItemsControl.Style>
+                        <Style TargetType="{x:Type ItemsControl}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsChecked, ElementName=archiveButton}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsChecked, ElementName=archiveButton}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ItemsControl.Style>
                 </ItemsControl>
             </StackPanel>
         </Grid>

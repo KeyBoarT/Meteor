@@ -32,12 +32,12 @@ namespace MeteorChat.MVVM.ViewModels
         public string ConversationFilter { get => _conversationFilter; set { _conversationFilter = value; OnPropertyChanged(); ConversationsCollectionView.Refresh(); } }
         public string ChatsFilter { get => _chatFilter; set { _chatFilter = value; OnPropertyChanged(); ChatsCollectionView.Refresh(); } }
         public ObservableCollection<StatusDataModel> StatusThumbsCollection { get => _statusThumbsCollection; set { _statusThumbsCollection = value; OnPropertyChanged(); } }
-        public ICollectionView ChatsCollectionView { get; set; }
         public ObservableCollection<ChatListDataModel> Chats { get => _chats; set { _chats = value; OnPropertyChanged(); } }
-        public ICollectionView ConversationsCollectionView { get; set; }
         public ObservableCollection<ChatConversationModel> Conversations { get => _conversations; set { _conversations = value; OnPropertyChanged(); } }
         public ObservableCollection<ChatListDataModel> ArchivedChats { get => _archivedChats; set { _archivedChats = value; OnPropertyChanged(); } }
-
+        public ICollectionView ChatsCollectionView { get; set; }
+        public ICollectionView ConversationsCollectionView { get; set; }
+        public ICollectionView ArchivedChatsCollectionView { get; set; }
         #endregion
 
         #region Commands
@@ -112,6 +112,7 @@ namespace MeteorChat.MVVM.ViewModels
                     ContactName = v.ContactName;
                     ContactPhoto = v.ContactPhoto;
                     LastSeen = v.LastMessageTime;
+                    LoadChatConversation(ContactName);
                 }
             });
             ChangeChatPinStateCommand = new RelayCommand(o =>
@@ -121,16 +122,34 @@ namespace MeteorChat.MVVM.ViewModels
                     v.IsPinned = !v.IsPinned;
                 }
                 ChatsCollectionView.Refresh();
+                ArchivedChatsCollectionView.Refresh();
             });
             ChangeChatArchiveStateCommand = new RelayCommand(o =>
             {
                 //1 Arşivde mi, değil mi kontrol et
                 //2 Arşivde değil ise...
-                //2.1 Pinli ise pinini kaldır
-                //2.2 Arşivlenmiş işaretini ekle
+                //2.1 Arşivlenmiş işaretini ekle
                 //3 Arşivde ise
                 //3.1 Arşivden Kaldır
                 //4 İki tarafı da refreshle
+
+                if (o is ChatListDataModel model)
+                {
+                    if (model.IsArchived)
+                    {
+                        model.IsArchived = false;
+                        ArchivedChats.Remove(model);
+                        Chats.Add(model);
+                        //To-Do: Sql Update
+                    }
+                    else
+                    {
+                        model.IsArchived = true;
+                        ArchivedChats.Add(model);
+                        Chats.Remove(model);
+                        //To-Do: Sql Update
+                    }
+                }
             });
         }
         private void LoadChats()
@@ -194,17 +213,18 @@ namespace MeteorChat.MVVM.ViewModels
                 }
             };
         }
-        private void LoadChatConversation()
+        private void LoadChatConversation(string name)
         {
             if (_connection.State == System.Data.ConnectionState.Closed)
             {
                 _connection.Open();
             }
-            if (_conversations == null) { _conversations = new ObservableCollection<ChatConversationModel>(); }
-            using (SqlCommand com = new SqlCommand("select * from conversations where ContactName='Mike'", _connection))
+            if (_conversations == null) _conversations = new ObservableCollection<ChatConversationModel>();
+            using (SqlCommand com = new SqlCommand($"select * from conversations where ContactName='{name}'", _connection))
             {
                 using (SqlDataReader reader = com.ExecuteReader())
                 {
+                    Conversations.Clear();
                     while(reader.Read())
                     {
                         string MsqReceivedOn = !string.IsNullOrEmpty(reader["MsgReceivedOn"].ToString()) ? Convert.ToDateTime(reader["MsgReceivedOn"].ToString()).ToString("MMM dd, hh:mm tt") : "";
@@ -239,6 +259,11 @@ namespace MeteorChat.MVVM.ViewModels
             //following code is to keep the pinned chats always up.
             ChatsCollectionView.SortDescriptions.Add(new SortDescription("IsPinned", ListSortDirection.Descending));
         }
+        private void SetArchivedChatFilter()
+        {
+            ArchivedChatsCollectionView = CollectionViewSource.GetDefaultView(ArchivedChats);
+            ArchivedChatsCollectionView.SortDescriptions.Add(new SortDescription("IsPinned", ListSortDirection.Descending));
+        }
         private bool FilterConversation(object o)
         {
             return o is ChatConversationModel model
@@ -263,9 +288,10 @@ namespace MeteorChat.MVVM.ViewModels
             AssignCommands();
             LoadStatusThumbs();
             LoadChats();
-            LoadChatConversation();
+            //LoadChatConversation();
             SetConversationFilter();
             SetChatFilter();
+            SetArchivedChatFilter();
         }
     }
 }
