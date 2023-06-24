@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MeteorChat.MVVM.Models
 {
@@ -13,5 +9,7 @@ namespace MeteorChat.MVVM.Models
         public string Message { get; set; }
         public string LastMessageTime { get; set; }
         public bool IsSelected { get; set; }
+        public bool IsPinned { get; set; }
+        public bool IsArchived { get; set; }
     }
 }

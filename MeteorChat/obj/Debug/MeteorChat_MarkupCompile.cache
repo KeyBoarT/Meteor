@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\mehme\source\repos\MeteorChat\MeteorChat\App.xaml
-61833681275
+6990917485
 2-837244087
-1515024167
+15-718449596
 13-1505183044
-Assets\icons.xaml;CustomControls\ChatList.xaml;CustomControls\ContactInfo.xaml;CustomControls\Conversation.xaml;CustomControls\StatusThumbs.xaml;MainWindow.xaml;
+Assets\icons.xaml;CustomControls\ChatList.xaml;CustomControls\ContactInfo.xaml;CustomControls\Conversation.xaml;CustomControls\StatusThumbs.xaml;MVVM\Views\MainWindow.xaml;
 
 False
 

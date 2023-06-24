@@ -145,7 +145,11 @@
                                                 </Grid.ColumnDefinitions>
                                                 <!--Options Buttons-->
                                                 <UniformGrid Columns="4" Grid.Column="1">
-                                                    <Button Content="{StaticResource pinned}" Style="{StaticResource IconButtonStyle}"/>
+                                                    <Button 
+                                                        x:Name="IsPinned"
+                                                        Style="{StaticResource IconButtonStyle}"
+                                                        Command="{Binding DataContext.ChangeChatPinStateCommand, ElementName=_Chats, UpdateSourceTrigger=PropertyChanged}"
+                                                        CommandParameter="{Binding}"/>
                                                     <Button Content="{StaticResource archive}" Style="{StaticResource IconButtonStyle}"/>
                                                     <Button Content="{StaticResource mute}" Style="{StaticResource IconButtonStyle}"/>
                                                     <Button Content="{StaticResource trash}" Style="{StaticResource IconButtonStyle}"/>
@@ -154,6 +158,16 @@
                                             <!--#endregion-->
                                         </Grid>
                                     </Border>
+
+                                    <!--For editing chats pin-->
+                                    <ControlTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding IsPinned}" Value="True">
+                                            <Setter TargetName="IsPinned" Property="Content" Value="{StaticResource unpin}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsPinned}" Value="False">
+                                            <Setter TargetName="IsPinned" Property="Content" Value="{StaticResource pinned}"/>
+                                        </DataTrigger>
+                                    </ControlTemplate.Triggers>
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -182,7 +196,26 @@
 
                 <!--Chat List-->
                 <ItemsControl
-                ItemsSource="{Binding Chats, UpdateSourceTrigger=PropertyChanged}"
+                ItemsSource="{Binding ChatsCollectionView, UpdateSourceTrigger=PropertyChanged}"
+                ItemTemplate="{StaticResource ChatButtonItemTemplate}"
+                Padding="0, 15">
+                </ItemsControl>
+                
+                <!--Title-->
+                <StackPanel Orientation="Horizontal" x:Name="archivedPanel">
+                    <Path
+                    Fill="Black"
+                    Data="{StaticResource archive}"/>
+                    <TextBlock
+                    Margin="10 0"
+                    Text="Arcived Chats"
+                    FontWeight="SemiBold"
+                    VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!--Chat List-->
+                <ItemsControl
+                ItemsSource="{Binding ArchivedChats, UpdateSourceTrigger=PropertyChanged}"
                 ItemTemplate="{StaticResource ChatButtonItemTemplate}"
                 Padding="0, 15">
                 </ItemsControl>
